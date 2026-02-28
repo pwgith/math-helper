@@ -86,9 +86,9 @@ No UI mockup exists yet.
 
 Trace to Gherkin feature files that implement this use case (maintained as features are created):
 
-| Feature ID | Scenario IDs          | Description                     |
-|------------|-----------------------|---------------------------------|
-| F-NNN      | S-NNN, S-NNN          | _To be defined_                 |
+| Feature ID | Scenario IDs                                                             | Description                                              |
+|------------|--------------------------------------------------------------------------|----------------------------------------------------------|
+| F-002      | S-011, S-012, S-013, S-014, S-015, S-016, S-017, S-018, S-019, S-020, S-021 | Calculate area in square metres with unit conversion |
 
 ## Notes
 

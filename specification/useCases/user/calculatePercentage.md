@@ -80,9 +80,9 @@ No UI mockup exists yet.
 
 Trace to Gherkin feature files that implement this use case (maintained as features are created):
 
-| Feature ID | Scenario IDs          | Description                     |
-|------------|-----------------------|---------------------------------|
-| F-NNN      | S-NNN, S-NNN          | _To be defined_                 |
+| Feature ID | Scenario IDs                                                      | Description                                                    |
+|------------|-------------------------------------------------------------------|----------------------------------------------------------------|
+| F-001      | S-001, S-002, S-003, S-004, S-005, S-006, S-007, S-008, S-009, S-010 | Calculate percentage (of a number, discount, and increase) |
 
 ## Notes
 

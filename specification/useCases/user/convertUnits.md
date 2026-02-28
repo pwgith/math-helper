@@ -83,9 +83,9 @@ No UI mockup exists yet.
 
 Trace to Gherkin feature files that implement this use case (maintained as features are created):
 
-| Feature ID | Scenario IDs          | Description                     |
-|------------|-----------------------|---------------------------------|
-| F-NNN      | S-NNN, S-NNN          | _To be defined_                 |
+| Feature ID | Scenario IDs                                                                        | Description                                              |
+|------------|---------------------------------------------------------------------------------------------|----------------------------------------------------------|
+| F-003      | S-022, S-023, S-024, S-025, S-026, S-027, S-028, S-029, S-030, S-031, S-032, S-033 | Convert values between compatible units with explanation |
 
 ## Notes
 
