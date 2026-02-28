@@ -80,7 +80,7 @@ The user navigates to the square metres calculator.
 
 ## UI Reference
 
-No UI mockup exists yet.
+[./design/ui/calculateSquareMetres.html](../../design/ui/calculateSquareMetres.html)
 
 ## Features
 

@@ -22,12 +22,12 @@ Feature: Calculate percentage
   Scenario Outline: Calculate a percentage discount
     Given the user has selected the "percentage discount" calculation type
     And the user has entered <percentage> as the percentage value
-    And the user has entered <price> as the base number
+    And the user has entered <number> as the base number
     When the user submits the calculation
     Then the result "<result>" is displayed
 
     Examples:
-      | percentage | price | result |
+      | percentage | number | result |
       | 20         | 100   | 80     |
       | 10         | 250   | 225    |
       | 15         | 39.90 | 33.92  |
@@ -104,3 +104,21 @@ Feature: Calculate percentage
     When the user submits the calculation
     Then the result "0" is displayed
     And the explanation notes that any percentage of zero is zero
+
+  @S-034 @UC-USR-001
+  Scenario Outline: Explanation includes a shortcut multiplier tip
+    Given the user has selected the "<type>" calculation type
+    And the user has entered <percentage> as the percentage value
+    And the user has entered <number> as the base number
+    When the user submits the calculation
+    Then the explanation includes a shortcut tip
+    And the shortcut tip shows "multiply by <multiplier>" as the single-step equivalent
+
+    Examples:
+      | type                    | percentage | number | multiplier |
+      | percentage of a number  | 10         | 200    | 0.1        |
+      | percentage of a number  | 25         | 80     | 0.25       |
+      | percentage discount     | 15         | 100    | 0.85       |
+      | percentage discount     | 20         | 250    | 0.8        |
+      | percentage increase     | 15         | 200    | 1.15       |
+      | percentage increase     | 50         | 100    | 1.5        |

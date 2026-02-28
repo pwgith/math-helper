@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculate Square Metres — UI Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    .input-error { border-color: #f87171 !important; }
+    .input-error:focus { --tw-ring-color: #ef4444 !important; }
+  </style>
+</head>
+<body class="font-['Inter',system-ui,-apple-system,sans-serif]">
+
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full max-w-lg space-y-6 animate-fade-in">
+
+      <!-- Form Card -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Square Metres Calculator</h1>
+          <p class="text-slate-600 text-sm mt-2">Calculate area from length and width — each in any supported unit — with a full breakdown.</p>
+        </div>
+
+        <form id="calcForm" class="space-y-5" onsubmit="handleSubmit(event)" novalidate>
+          <!-- Length -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-700" for="lengthValue">Length</label>
+            <div class="flex gap-2">
+              <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 flex-1" type="text" id="lengthValue" inputmode="decimal" placeholder="e.g. 150" aria-required="true" aria-label="Length value" />
+              <select class="px-3 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer" id="lengthUnit" aria-label="Length unit">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m" selected>m</option>
+                <option value="km">km</option>
+              </select>
+            </div>
+            <div class="text-red-600 text-xs mt-1 flex items-center gap-1 hidden" id="lengthError" role="alert">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span></span>
+            </div>
+          </div>
+
+          <!-- Width -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-700" for="widthValue">Width</label>
+            <div class="flex gap-2">
+              <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 flex-1" type="text" id="widthValue" inputmode="decimal" placeholder="e.g. 5" aria-required="true" aria-label="Width value" />
+              <select class="px-3 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer" id="widthUnit" aria-label="Width unit">
+                <option value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="m" selected>m</option>
+                <option value="km">km</option>
+              </select>
+            </div>
+            <div class="text-red-600 text-xs mt-1 flex items-center gap-1 hidden" id="widthError" role="alert">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span></span>
+            </div>
+          </div>
+
+          <button type="submit" class="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg shadow-blue-500/25 w-full" id="submitBtn">
+            Calculate Area
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading State -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="loadingState">
+        <div class="flex items-center justify-center gap-2 py-4">
+          <div class="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+          <span class="text-sm text-slate-600">Calculating…</span>
+        </div>
+      </div>
+
+      <!-- Result Section -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="resultSection">
+        <!-- Primary result -->
+        <div class="text-center mb-6">
+          <p class="text-sm font-medium text-slate-500 mb-1">Area</p>
+          <p class="text-4xl sm:text-5xl font-bold text-slate-900" id="resultValue">3 m²</p>
+        </div>
+
+        <hr class="border-slate-200 mb-6" />
+
+        <!-- Explanation -->
+        <div class="mb-6">
+          <h2 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            How it works
+          </h2>
+          <div class="space-y-3 text-sm text-slate-600" id="explanationContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <hr class="border-slate-200 mb-6" />
+
+        <!-- Supplementary unit conversions -->
+        <div>
+          <h2 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"/></svg>
+            Also equal to
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="supplementaryUnits">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      <div class="p-4 rounded-xl text-sm flex items-start gap-3 bg-red-50 text-red-700 border border-red-200 hidden" id="globalError" role="alert">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+        <span id="globalErrorText"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const toMetres = { mm: 0.001, cm: 0.01, m: 1, km: 1000 };
+    const unitNames = { mm: 'millimetres', cm: 'centimetres', m: 'metres', km: 'kilometres' };
+    const divisors = { mm: 1000, cm: 100, m: 1, km: 0.001 };
+    const factorExplanations = {
+      mm: 'there are 1000 mm in a metre',
+      cm: 'there are 100 cm in a metre',
+      km: 'there are 1000 m in a kilometre'
+    };
+
+    function clearErrors() {
+      ['lengthError', 'widthError'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      ['lengthValue', 'widthValue'].forEach(id => document.getElementById(id).classList.remove('input-error'));
+      document.getElementById('globalError').classList.add('hidden');
+    }
+
+    function showFieldError(fieldId, errorId, message) {
+      document.getElementById(fieldId).classList.add('input-error');
+      const el = document.getElementById(errorId);
+      el.classList.remove('hidden');
+      el.querySelector('span').textContent = message;
+    }
+
+    function hideResult() {
+      document.getElementById('resultSection').classList.add('hidden');
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      clearErrors();
+
+      const lengthRaw = document.getElementById('lengthValue').value.trim();
+      const widthRaw = document.getElementById('widthValue').value.trim();
+      let valid = true;
+
+      // Validate length
+      if (!lengthRaw) {
+        showFieldError('lengthValue', 'lengthError', 'Length is required.');
+        valid = false;
+      } else if (isNaN(Number(lengthRaw))) {
+        showFieldError('lengthValue', 'lengthError', 'Please enter a valid number.');
+        valid = false;
+      } else if (Number(lengthRaw) <= 0) {
+        showFieldError('lengthValue', 'lengthError', 'Length must be greater than zero.');
+        valid = false;
+      }
+
+      // Validate width
+      if (!widthRaw) {
+        showFieldError('widthValue', 'widthError', 'Width is required.');
+        valid = false;
+      } else if (isNaN(Number(widthRaw))) {
+        showFieldError('widthValue', 'widthError', 'Please enter a valid number.');
+        valid = false;
+      } else if (Number(widthRaw) <= 0) {
+        showFieldError('widthValue', 'widthError', 'Width must be greater than zero.');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      const lengthVal = Number(lengthRaw);
+      const widthVal = Number(widthRaw);
+      const lengthUnit = document.getElementById('lengthUnit').value;
+      const widthUnit = document.getElementById('widthUnit').value;
+
+      document.getElementById('loadingState').classList.remove('hidden');
+      hideResult();
+
+      setTimeout(() => {
+        document.getElementById('loadingState').classList.add('hidden');
+        calculate(lengthVal, lengthUnit, widthVal, widthUnit);
+      }, 400);
+    }
+
+    function formatNum(n) {
+      const rounded = parseFloat(n.toFixed(4));
+      return rounded.toString();
+    }
+
+    function wasRounded(n) {
+      return parseFloat(n.toFixed(4)) !== n;
+    }
+
+    function formatSupplementary(n, unit) {
+      const display = formatNum(n);
+      const rounded = wasRounded(n);
+      let html = `<p class="font-semibold text-slate-800 text-sm">${rounded ? '≈ ' : ''}${display}</p>`;
+      if (rounded) {
+        html += `<p class="text-xs text-amber-600 mt-1">Rounded to 4 d.p.</p>`;
+      }
+      return html;
+    }
+
+    function calculate(lengthVal, lengthUnit, widthVal, widthUnit) {
+      const lengthM = lengthVal * toMetres[lengthUnit];
+      const widthM = widthVal * toMetres[widthUnit];
+      const areaM2 = lengthM * widthM;
+
+      // Build explanation
+      let explanationHtml = '';
+
+      // Length conversion
+      if (lengthUnit !== 'm') {
+        const op = toMetres[lengthUnit] < 1 ? '÷' : '×';
+        const factor = toMetres[lengthUnit] < 1 ? (1 / toMetres[lengthUnit]) : toMetres[lengthUnit];
+        explanationHtml += `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+            <p><strong>Convert length:</strong> ${lengthVal} ${lengthUnit} to metres</p>
+            <p class="font-mono text-slate-800">${lengthVal} ${lengthUnit} ${op} ${factor} = ${formatNum(lengthM)} m</p>
+            <p class="text-xs text-slate-500">Because ${factorExplanations[lengthUnit]}.</p>
+          </div>
+        `;
+      } else {
+        explanationHtml += `
+          <div class="bg-slate-50 rounded-lg p-3">
+            <p><strong>Length:</strong> ${formatNum(lengthVal)} m (already in metres)</p>
+          </div>
+        `;
+      }
+
+      // Width conversion
+      if (widthUnit !== 'm') {
+        const op = toMetres[widthUnit] < 1 ? '÷' : '×';
+        const factor = toMetres[widthUnit] < 1 ? (1 / toMetres[widthUnit]) : toMetres[widthUnit];
+        explanationHtml += `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+            <p><strong>Convert width:</strong> ${widthVal} ${widthUnit} to metres</p>
+            <p class="font-mono text-slate-800">${widthVal} ${widthUnit} ${op} ${factor} = ${formatNum(widthM)} m</p>
+            <p class="text-xs text-slate-500">Because ${factorExplanations[widthUnit]}.</p>
+          </div>
+        `;
+      } else {
+        explanationHtml += `
+          <div class="bg-slate-50 rounded-lg p-3">
+            <p><strong>Width:</strong> ${formatNum(widthVal)} m (already in metres)</p>
+          </div>
+        `;
+      }
+
+      // Multiplication
+      explanationHtml += `
+        <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+          <p><strong>Multiply to get area:</strong></p>
+          <p class="font-mono text-slate-800">${formatNum(lengthM)} m × ${formatNum(widthM)} m = ${formatNum(areaM2)} m²</p>
+        </div>
+      `;
+
+      // Why it works
+      explanationHtml += `
+        <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+          <p><strong>Why it works:</strong> Area is length × width. By first converting both measurements to metres, the product is in square metres (m²).</p>
+        </div>
+      `;
+
+      const resultRounded = wasRounded(areaM2);
+      document.getElementById('resultValue').textContent = `${resultRounded ? '≈ ' : ''}${formatNum(areaM2)} m²`;
+      document.getElementById('explanationContent').innerHTML = explanationHtml;
+      if (resultRounded) {
+        document.getElementById('explanationContent').innerHTML += `
+          <div class="bg-amber-50 rounded-lg p-3 border border-amber-100 text-xs text-amber-700">
+            <strong>Note:</strong> The result has been rounded to 4 decimal places because the exact value has more digits than are practical to display.
+          </div>
+        `;
+      }
+
+      // Supplementary conversions
+      const mm2 = areaM2 * 1000000;
+      const cm2 = areaM2 * 10000;
+      const km2 = areaM2 * 0.000001;
+
+      document.getElementById('supplementaryUnits').innerHTML = `
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <p class="text-xs text-slate-500 mb-0.5">mm²</p>
+          ${formatSupplementary(mm2, 'mm²')}
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <p class="text-xs text-slate-500 mb-0.5">cm²</p>
+          ${formatSupplementary(cm2, 'cm²')}
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 text-center">
+          <p class="text-xs text-slate-500 mb-0.5">km²</p>
+          ${formatSupplementary(km2, 'km²')}
+        </div>
+      `;
+
+      document.getElementById('resultSection').classList.remove('hidden');
+    }
+  </script>
+
+</body>
+</html>

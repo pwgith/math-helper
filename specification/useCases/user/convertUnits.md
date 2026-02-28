@@ -77,7 +77,7 @@ The user navigates to the unit converter.
 
 ## UI Reference
 
-No UI mockup exists yet.
+[./design/ui/convertUnits.html](../../design/ui/convertUnits.html)
 
 ## Features
 

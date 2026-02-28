@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculate Percentage — UI Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    .input-error { border-color: #f87171 !important; }
+    .input-error:focus { --tw-ring-color: #ef4444 !important; }
+  </style>
+</head>
+<body class="font-['Inter',system-ui,-apple-system,sans-serif]">
+
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full max-w-lg space-y-6 animate-fade-in">
+
+      <!-- Form Card -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Percentage Calculator</h1>
+          <p class="text-slate-600 text-sm mt-2">Calculate percentages, discounts, and increases — with a step-by-step explanation.</p>
+        </div>
+
+        <!-- Calculation Type Selector -->
+        <div class="bg-slate-100 rounded-xl p-1.5 grid grid-cols-3 gap-1 mb-6" role="tablist" aria-label="Calculation type">
+          <button class="py-2.5 px-3 text-sm font-semibold rounded-lg cursor-pointer transition-all duration-200 bg-white text-blue-600 shadow-sm" role="tab" aria-selected="true" data-type="percentage" onclick="switchType('percentage')">
+            % of Number
+          </button>
+          <button class="py-2.5 px-3 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200 text-slate-500 hover:text-slate-700" role="tab" aria-selected="false" data-type="discount" onclick="switchType('discount')">
+            Discount
+          </button>
+          <button class="py-2.5 px-3 text-sm font-medium rounded-lg cursor-pointer transition-all duration-200 text-slate-500 hover:text-slate-700" role="tab" aria-selected="false" data-type="increase" onclick="switchType('increase')">
+            Increase
+          </button>
+        </div>
+
+        <!-- Form -->
+        <form id="calcForm" class="space-y-5" onsubmit="handleSubmit(event)" novalidate>
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-700" for="percentageValue">Percentage (%)</label>
+            <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" type="text" id="percentageValue" inputmode="decimal" placeholder="e.g. 20" aria-required="true" />
+            <div class="text-red-600 text-xs mt-1 flex items-center gap-1 hidden" id="percentageError" role="alert">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span></span>
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-700" for="baseNumber" id="baseLabel">Number</label>
+            <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" type="text" id="baseNumber" inputmode="decimal" placeholder="e.g. 150" aria-required="true" />
+            <div class="text-red-600 text-xs mt-1 flex items-center gap-1 hidden" id="baseError" role="alert">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span></span>
+            </div>
+          </div>
+
+          <button type="submit" class="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg shadow-blue-500/25 w-full" id="submitBtn">
+            Calculate
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading State (hidden by default) -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="loadingState">
+        <div class="flex items-center justify-center gap-2 py-4">
+          <div class="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+          <span class="text-sm text-slate-600">Calculating…</span>
+        </div>
+      </div>
+
+      <!-- Result Section (hidden by default) -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="resultSection">
+        <!-- Result -->
+        <div class="text-center mb-6">
+          <p class="text-sm font-medium text-slate-500 mb-1" id="resultLabel">Result</p>
+          <p class="text-4xl sm:text-5xl font-bold text-slate-900" id="resultValue">30</p>
+        </div>
+
+        <hr class="border-slate-200 mb-6" />
+
+        <!-- Explanation -->
+        <div>
+          <h2 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            How it works
+          </h2>
+          <div class="space-y-3 text-sm text-slate-600" id="explanationContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Alert (hidden by default) -->
+      <div class="p-4 rounded-xl text-sm flex items-start gap-3 bg-red-50 text-red-700 border border-red-200 hidden" id="globalError" role="alert">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+        <span id="globalErrorText"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // State
+    let currentType = 'percentage';
+
+    const labels = {
+      percentage: { base: 'Number', placeholder: 'e.g. 150', resultPrefix: '' },
+      discount:   { base: 'Original Number', placeholder: 'e.g. 100', resultPrefix: '' },
+      increase:   { base: 'Original Number', placeholder: 'e.g. 200', resultPrefix: '' }
+    };
+
+    // Switch calculation type
+    function switchType(type) {
+      currentType = type;
+      const activeClasses = ['bg-white', 'text-blue-600', 'shadow-sm', 'font-semibold'];
+      const inactiveClasses = ['text-slate-500', 'font-medium'];
+      document.querySelectorAll('[role="tab"]').forEach(tab => {
+        const isActive = tab.dataset.type === type;
+        tab.setAttribute('aria-selected', isActive);
+        if (isActive) {
+          inactiveClasses.forEach(c => tab.classList.remove(c));
+          activeClasses.forEach(c => tab.classList.add(c));
+        } else {
+          activeClasses.forEach(c => tab.classList.remove(c));
+          inactiveClasses.forEach(c => tab.classList.add(c));
+        }
+      });
+
+      // Update label and placeholder
+      const config = labels[type];
+      document.getElementById('baseLabel').textContent = config.base;
+      document.getElementById('baseNumber').placeholder = config.placeholder;
+
+      // Clear inputs and errors
+      document.getElementById('percentageValue').value = '';
+      document.getElementById('baseNumber').value = '';
+      clearErrors();
+      hideResult();
+    }
+
+    function clearErrors() {
+      ['percentageError', 'baseError'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      ['percentageValue', 'baseNumber'].forEach(id => {
+        document.getElementById(id).classList.remove('input-error');
+      });
+      document.getElementById('globalError').classList.add('hidden');
+    }
+
+    function showFieldError(fieldId, errorId, message) {
+      document.getElementById(fieldId).classList.add('input-error');
+      const errorEl = document.getElementById(errorId);
+      errorEl.classList.remove('hidden');
+      errorEl.querySelector('span').textContent = message;
+    }
+
+    function hideResult() {
+      document.getElementById('resultSection').classList.add('hidden');
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      clearErrors();
+
+      const pctRaw = document.getElementById('percentageValue').value.trim();
+      const baseRaw = document.getElementById('baseNumber').value.trim();
+      let valid = true;
+
+      // Validate percentage
+      if (!pctRaw) {
+        showFieldError('percentageValue', 'percentageError', 'Percentage is required.');
+        valid = false;
+      } else if (isNaN(Number(pctRaw))) {
+        showFieldError('percentageValue', 'percentageError', 'Please enter a valid number.');
+        valid = false;
+      }
+
+      // Validate base
+      if (!baseRaw) {
+        showFieldError('baseNumber', 'baseError', `${labels[currentType].base} is required.`);
+        valid = false;
+      } else if (isNaN(Number(baseRaw))) {
+        showFieldError('baseNumber', 'baseError', 'Please enter a valid number.');
+        valid = false;
+      } else if ((currentType === 'discount' || currentType === 'increase') && Number(baseRaw) < 0) {
+        showFieldError('baseNumber', 'baseError', 'Value must not be negative.');
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      const pct = Number(pctRaw);
+      const base = Number(baseRaw);
+
+      // Simulate brief loading
+      document.getElementById('loadingState').classList.remove('hidden');
+      hideResult();
+
+      setTimeout(() => {
+        document.getElementById('loadingState').classList.add('hidden');
+        calculate(pct, base);
+      }, 400);
+    }
+
+    function calculate(pct, base) {
+      let result, resultLabel, explanationHtml;
+
+      if (currentType === 'percentage') {
+        result = (base * pct) / 100;
+        resultLabel = `${pct}% of ${base}`;
+        explanationHtml = `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 1:</strong> Divide the percentage by 100 to get a decimal.</p>
+            <p class="font-mono text-slate-800">${pct} ÷ 100 = ${pct / 100}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 2:</strong> Multiply the base number by the decimal.</p>
+            <p class="font-mono text-slate-800">${base} × ${pct / 100} = ${round(result)}</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+            <p><strong>Why it works:</strong> "Percent" means "per hundred". So ${pct}% means ${pct} out of every 100. Multiplying ${base} by ${pct}/100 scales it down to that proportion.</p>
+          </div>
+          <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
+            <p class="text-emerald-800"><strong>💡 Shortcut:</strong> To find ${pct}% of any number, multiply it by ${pct / 100}.</p>
+            <p class="text-emerald-700 text-sm mt-1 font-mono">${base} × ${pct / 100} = ${round(result)}</p>
+          </div>
+        `;
+      } else if (currentType === 'discount') {
+        const discountAmount = (base * pct) / 100;
+        result = base - discountAmount;
+        resultLabel = `${base} after a ${pct}% discount`;
+        explanationHtml = `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 1:</strong> Calculate the discount amount — ${pct}% of ${base}.</p>
+            <p class="font-mono text-slate-800">${base} × ${pct}/100 = ${round(discountAmount)}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 2:</strong> Subtract the discount from the original price.</p>
+            <p class="font-mono text-slate-800">${base} − ${round(discountAmount)} = ${round(result)}</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+            <p><strong>Why it works:</strong> A ${pct}% discount means you pay ${100 - pct}% of the original price. Removing ${pct} parts out of every 100 from ${base} leaves you with ${round(result)}.</p>
+          </div>
+          <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200 space-y-1">
+            <p class="text-emerald-800"><strong>💡 Shortcut:</strong> To apply a ${pct}% discount, multiply by ${(100 - pct) / 100}.</p>
+            <p class="text-emerald-700 text-sm">100% is made up of ${pct}% discount and ${100 - pct}% keep — you're interested in the part you keep, so multiply by ${100 - pct} ÷ 100 = ${(100 - pct) / 100}.</p>
+            <p class="text-emerald-700 text-sm font-mono">${base} × ${(100 - pct) / 100} = ${round(result)}</p>
+          </div>
+        `;
+      } else {
+        const increaseAmount = (base * pct) / 100;
+        result = base + increaseAmount;
+        resultLabel = `${base} after a ${pct}% increase`;
+        explanationHtml = `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 1:</strong> Calculate the increase amount — ${pct}% of ${base}.</p>
+            <p class="font-mono text-slate-800">${base} × ${pct}/100 = ${round(increaseAmount)}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-3 space-y-2">
+            <p><strong>Step 2:</strong> Add the increase to the original number.</p>
+            <p class="font-mono text-slate-800">${base} + ${round(increaseAmount)} = ${round(result)}</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+            <p><strong>Why it works:</strong> A ${pct}% increase means you end up with ${100 + pct}% of the original value. Adding ${pct} parts out of every 100 of ${base} gives ${round(result)}.</p>
+          </div>
+          <div class="bg-emerald-50 rounded-lg p-3 border border-emerald-200 space-y-1">
+            <p class="text-emerald-800"><strong>💡 Shortcut:</strong> To apply a ${pct}% increase, multiply by ${(100 + pct) / 100}.</p>
+            <p class="text-emerald-700 text-sm">A ${pct}% increase means you have 100% + ${pct}% = ${100 + pct}% — that's ${100 + pct} ÷ 100 = ${(100 + pct) / 100}.</p>
+            <p class="text-emerald-700 text-sm font-mono">${base} × ${(100 + pct) / 100} = ${round(result)}</p>
+          </div>
+        `;
+      }
+
+      // Handle zero base special case
+      if (base === 0) {
+        explanationHtml += `
+          <div class="p-4 rounded-xl text-sm flex items-start gap-3 bg-blue-50 text-blue-700 border border-blue-200 mt-3">
+            <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+            <span>Any percentage of zero is zero — multiplying zero by anything always gives zero.</span>
+          </div>
+        `;
+      }
+
+      const rounded = wasRounded(result);
+      document.getElementById('resultLabel').textContent = resultLabel;
+      document.getElementById('resultValue').textContent = `${rounded ? '\u2248 ' : ''}${round(result)}`;
+      document.getElementById('explanationContent').innerHTML = explanationHtml;
+      if (rounded) {
+        document.getElementById('explanationContent').innerHTML += `
+          <div class="bg-amber-50 rounded-lg p-3 border border-amber-100 text-xs text-amber-700">
+            <strong>Note:</strong> The result has been rounded to 2 decimal places because the exact value has more digits than are practical to display.
+          </div>
+        `;
+      }
+      document.getElementById('resultSection').classList.remove('hidden');
+    }
+
+    function round(num) {
+      return parseFloat(num.toFixed(2));
+    }
+
+    function wasRounded(num) {
+      return parseFloat(num.toFixed(2)) !== num;
+    }
+  </script>
+
+</body>
+</html>

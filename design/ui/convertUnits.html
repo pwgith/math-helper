@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Convert Units — UI Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    .input-error { border-color: #f87171 !important; }
+    .input-error:focus { --tw-ring-color: #ef4444 !important; }
+    select optgroup { font-weight: 600; color: #334155; }
+  </style>
+</head>
+<body class="font-['Inter',system-ui,-apple-system,sans-serif]">
+
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 px-4 sm:px-6 lg:px-8 py-8">
+    <div class="w-full max-w-lg space-y-6 animate-fade-in">
+
+      <!-- Form Card -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50">
+        <div class="text-center mb-6">
+          <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unit Converter</h1>
+          <p class="text-slate-600 text-sm mt-2">Convert between length, weight, volume, and temperature units — with an explanation of the maths.</p>
+        </div>
+
+        <form id="calcForm" class="space-y-5" onsubmit="handleSubmit(event)" novalidate>
+          <!-- Value -->
+          <div class="space-y-1.5">
+            <label class="block text-sm font-medium text-slate-700" for="inputValue">Value</label>
+            <input class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200" type="text" id="inputValue" inputmode="decimal" placeholder="e.g. 5" aria-required="true" />
+            <div class="text-red-600 text-xs mt-1 flex items-center gap-1 hidden" id="valueError" role="alert">
+              <svg class="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              <span></span>
+            </div>
+          </div>
+
+          <!-- From / To units -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-700" for="fromUnit">From</label>
+              <select class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer" id="fromUnit" aria-label="Input unit">
+                <optgroup label="Length">
+                  <option value="mm">Millimetres (mm)</option>
+                  <option value="cm">Centimetres (cm)</option>
+                  <option value="m">Metres (m)</option>
+                  <option value="km" selected>Kilometres (km)</option>
+                  <option value="in">Inches (in)</option>
+                  <option value="ft">Feet (ft)</option>
+                  <option value="yd">Yards (yd)</option>
+                  <option value="mi">Miles (mi)</option>
+                </optgroup>
+                <optgroup label="Weight">
+                  <option value="mg">Milligrams (mg)</option>
+                  <option value="g">Grams (g)</option>
+                  <option value="kg">Kilograms (kg)</option>
+                  <option value="lb">Pounds (lb)</option>
+                  <option value="oz">Ounces (oz)</option>
+                </optgroup>
+                <optgroup label="Volume">
+                  <option value="ml">Millilitres (ml)</option>
+                  <option value="l">Litres (l)</option>
+                  <option value="gal">Gallons (gal)</option>
+                  <option value="pt">Pints (pt)</option>
+                </optgroup>
+                <optgroup label="Temperature">
+                  <option value="C">Celsius (°C)</option>
+                  <option value="F">Fahrenheit (°F)</option>
+                  <option value="K">Kelvin (K)</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="space-y-1.5">
+              <label class="block text-sm font-medium text-slate-700" for="toUnit">To</label>
+              <select class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer" id="toUnit" aria-label="Output unit">
+                <optgroup label="Length">
+                  <option value="mm">Millimetres (mm)</option>
+                  <option value="cm">Centimetres (cm)</option>
+                  <option value="m">Metres (m)</option>
+                  <option value="km">Kilometres (km)</option>
+                  <option value="in">Inches (in)</option>
+                  <option value="ft">Feet (ft)</option>
+                  <option value="yd">Yards (yd)</option>
+                  <option value="mi" selected>Miles (mi)</option>
+                </optgroup>
+                <optgroup label="Weight">
+                  <option value="mg">Milligrams (mg)</option>
+                  <option value="g">Grams (g)</option>
+                  <option value="kg">Kilograms (kg)</option>
+                  <option value="lb">Pounds (lb)</option>
+                  <option value="oz">Ounces (oz)</option>
+                </optgroup>
+                <optgroup label="Volume">
+                  <option value="ml">Millilitres (ml)</option>
+                  <option value="l">Litres (l)</option>
+                  <option value="gal">Gallons (gal)</option>
+                  <option value="pt">Pints (pt)</option>
+                </optgroup>
+                <optgroup label="Temperature">
+                  <option value="C">Celsius (°C)</option>
+                  <option value="F">Fahrenheit (°F)</option>
+                  <option value="K">Kelvin (K)</option>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 hover:from-blue-700 hover:to-indigo-700 focus:ring-blue-500 shadow-lg shadow-blue-500/25 w-full">
+            Convert
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading State -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="loadingState">
+        <div class="flex items-center justify-center gap-2 py-4">
+          <div class="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+          <span class="text-sm text-slate-600">Converting…</span>
+        </div>
+      </div>
+
+      <!-- Result Section -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="resultSection">
+        <div class="text-center mb-6">
+          <p class="text-sm font-medium text-slate-500 mb-1" id="resultLabel">5 kilometres in miles</p>
+          <p class="text-4xl sm:text-5xl font-bold text-slate-900" id="resultValue">3.1069</p>
+          <p class="text-lg text-slate-500 mt-1" id="resultUnit">miles</p>
+        </div>
+
+        <hr class="border-slate-200 mb-6" />
+
+        <!-- Explanation -->
+        <div>
+          <h2 class="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            How it works
+          </h2>
+          <div class="space-y-3 text-sm text-slate-600" id="explanationContent">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Incompatible Units Warning (hidden by default) -->
+      <div class="w-full max-w-lg bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-6 sm:p-8 border border-white/50 hidden" id="incompatibleSection">
+        <div class="p-4 rounded-xl text-sm flex items-start gap-3 bg-amber-50 text-amber-700 border border-amber-200">
+          <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <span id="incompatibleText"></span>
+        </div>
+      </div>
+
+      <!-- Error Alert -->
+      <div class="p-4 rounded-xl text-sm flex items-start gap-3 bg-red-50 text-red-700 border border-red-200 hidden" id="globalError" role="alert">
+        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+        <span id="globalErrorText"></span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Unit categories
+    const categories = {
+      mm: 'length', cm: 'length', m: 'length', km: 'length',
+      in: 'length', ft: 'length', yd: 'length', mi: 'length',
+      mg: 'weight', g: 'weight', kg: 'weight', lb: 'weight', oz: 'weight',
+      ml: 'volume', l: 'volume', gal: 'volume', pt: 'volume',
+      C: 'temperature', F: 'temperature', K: 'temperature'
+    };
+
+    const categoryLabels = {
+      length: 'length', weight: 'weight', volume: 'volume', temperature: 'temperature'
+    };
+
+    const unitLabels = {
+      mm: 'millimetres', cm: 'centimetres', m: 'metres', km: 'kilometres',
+      in: 'inches', ft: 'feet', yd: 'yards', mi: 'miles',
+      mg: 'milligrams', g: 'grams', kg: 'kilograms', lb: 'pounds', oz: 'ounces',
+      ml: 'millilitres', l: 'litres', gal: 'gallons', pt: 'pints',
+      C: 'degrees Celsius', F: 'degrees Fahrenheit', K: 'Kelvin'
+    };
+
+    const unitShort = {
+      mm: 'mm', cm: 'cm', m: 'm', km: 'km',
+      in: 'in', ft: 'ft', yd: 'yd', mi: 'mi',
+      mg: 'mg', g: 'g', kg: 'kg', lb: 'lb', oz: 'oz',
+      ml: 'ml', l: 'l', gal: 'gal', pt: 'pt',
+      C: '°C', F: '°F', K: 'K'
+    };
+
+    // Conversion factors to base unit (m for length, g for weight, ml for volume)
+    const toBase = {
+      mm: 0.001, cm: 0.01, m: 1, km: 1000,
+      in: 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344,
+      mg: 0.001, g: 1, kg: 1000, lb: 453.5924, oz: 28.3495,
+      ml: 1, l: 1000, gal: 3785.41, pt: 473.176
+    };
+
+    function formatNum(n) {
+      return parseFloat(n.toFixed(4)).toString();
+    }
+
+    function wasRounded(n) {
+      return parseFloat(n.toFixed(4)) !== n;
+    }
+
+    function clearErrors() {
+      document.getElementById('valueError').classList.add('hidden');
+      document.getElementById('inputValue').classList.remove('input-error');
+      document.getElementById('globalError').classList.add('hidden');
+    }
+
+    function showFieldError(message) {
+      document.getElementById('inputValue').classList.add('input-error');
+      const el = document.getElementById('valueError');
+      el.classList.remove('hidden');
+      el.querySelector('span').textContent = message;
+    }
+
+    function hideResults() {
+      document.getElementById('resultSection').classList.add('hidden');
+      document.getElementById('incompatibleSection').classList.add('hidden');
+    }
+
+    function handleSubmit(event) {
+      event.preventDefault();
+      clearErrors();
+      hideResults();
+
+      const raw = document.getElementById('inputValue').value.trim();
+      const fromUnit = document.getElementById('fromUnit').value;
+      const toUnit = document.getElementById('toUnit').value;
+
+      // Validate
+      if (!raw) {
+        showFieldError('Value is required.');
+        return;
+      }
+      if (isNaN(Number(raw))) {
+        showFieldError('Please enter a valid number.');
+        return;
+      }
+
+      const value = Number(raw);
+
+      // Check compatibility
+      if (categories[fromUnit] !== categories[toUnit]) {
+        document.getElementById('loadingState').classList.remove('hidden');
+        setTimeout(() => {
+          document.getElementById('loadingState').classList.add('hidden');
+          showIncompatible(fromUnit, toUnit);
+        }, 300);
+        return;
+      }
+
+      document.getElementById('loadingState').classList.remove('hidden');
+
+      setTimeout(() => {
+        document.getElementById('loadingState').classList.add('hidden');
+        calculate(value, fromUnit, toUnit);
+      }, 400);
+    }
+
+    function showIncompatible(fromUnit, toUnit) {
+      const fromCat = categoryLabels[categories[fromUnit]];
+      const toCat = categoryLabels[categories[toUnit]];
+      const text = `${capitalise(unitLabels[fromUnit])} measure ${fromCat} while ${unitLabels[toUnit]} measure ${toCat} — these are different physical quantities, so converting between them is not meaningful.`;
+      document.getElementById('incompatibleText').textContent = text;
+      document.getElementById('incompatibleSection').classList.remove('hidden');
+    }
+
+    function capitalise(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    function calculate(value, fromUnit, toUnit) {
+      let result, explanationHtml;
+      const isTemp = categories[fromUnit] === 'temperature';
+
+      if (isTemp) {
+        result = convertTemperature(value, fromUnit, toUnit);
+        explanationHtml = getTemperatureExplanation(value, fromUnit, toUnit, result);
+      } else {
+        // Convert via base unit
+        const inBase = value * toBase[fromUnit];
+        result = inBase / toBase[toUnit];
+
+        const factor = toBase[fromUnit] / toBase[toUnit];
+        explanationHtml = `
+          <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+            <p><strong>Conversion factor:</strong></p>
+            <p class="font-mono text-slate-800">1 ${unitShort[fromUnit]} = ${formatNum(factor)} ${unitShort[toUnit]}</p>
+          </div>
+          <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+            <p><strong>Calculation:</strong></p>
+            <p class="font-mono text-slate-800">${value} × ${formatNum(factor)} = ${formatNum(result)}</p>
+          </div>
+          <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+            <p><strong>Why it works:</strong> ${getFactorExplanation(fromUnit, toUnit, factor)}</p>
+          </div>
+        `;
+      }
+
+      const rounded = wasRounded(result);
+      document.getElementById('resultLabel').textContent = `${value} ${unitLabels[fromUnit]} in ${unitLabels[toUnit]}`;
+      document.getElementById('resultValue').textContent = `${rounded ? '\u2248 ' : ''}${formatNum(result)}`;
+      document.getElementById('resultUnit').textContent = unitLabels[toUnit];
+      document.getElementById('explanationContent').innerHTML = explanationHtml;
+      if (rounded) {
+        document.getElementById('explanationContent').innerHTML += `
+          <div class="bg-amber-50 rounded-lg p-3 border border-amber-100 text-xs text-amber-700">
+            <strong>Note:</strong> The result has been rounded to 4 decimal places because the exact value has more digits than are practical to display.
+          </div>
+        `;
+      }
+      document.getElementById('resultSection').classList.remove('hidden');
+    }
+
+    function convertTemperature(value, from, to) {
+      // Convert to Celsius first
+      let celsius;
+      if (from === 'C') celsius = value;
+      else if (from === 'F') celsius = (value - 32) * 5 / 9;
+      else celsius = value - 273.15; // K
+
+      // Convert from Celsius to target
+      if (to === 'C') return celsius;
+      if (to === 'F') return celsius * 9 / 5 + 32;
+      return celsius + 273.15; // K
+    }
+
+    function getTemperatureExplanation(value, from, to, result) {
+      const formulas = {
+        'C-F': { formula: '°F = °C × 9/5 + 32', steps: `${value} × 9/5 + 32 = ${formatNum(result)}`, why: 'The Fahrenheit scale uses smaller degrees (each °F is 5/9 of a °C) and offsets its zero point to 32 — the freezing point of water in Fahrenheit.' },
+        'F-C': { formula: '°C = (°F − 32) × 5/9', steps: `(${value} − 32) × 5/9 = ${formatNum(result)}`, why: 'To convert from Fahrenheit, first remove the 32-degree offset, then scale from the smaller Fahrenheit degrees to the larger Celsius degrees by multiplying by 5/9.' },
+        'C-K': { formula: 'K = °C + 273.15', steps: `${value} + 273.15 = ${formatNum(result)}`, why: 'The Kelvin scale starts at absolute zero (−273.15 °C), so you simply shift the Celsius value up by 273.15.' },
+        'K-C': { formula: '°C = K − 273.15', steps: `${value} − 273.15 = ${formatNum(result)}`, why: 'Since Kelvin starts at absolute zero, subtracting 273.15 brings the value back to the Celsius scale.' },
+        'F-K': { formula: 'K = (°F − 32) × 5/9 + 273.15', steps: `(${value} − 32) × 5/9 + 273.15 = ${formatNum(result)}`, why: 'First convert Fahrenheit to Celsius (remove offset and rescale), then shift to Kelvin by adding 273.15.' },
+        'K-F': { formula: '°F = (K − 273.15) × 9/5 + 32', steps: `(${value} − 273.15) × 9/5 + 32 = ${formatNum(result)}`, why: 'First convert Kelvin to Celsius (subtract 273.15), then scale to Fahrenheit and add the 32-degree offset.' }
+      };
+
+      const key = `${from}-${to}`;
+
+      if (from === to) {
+        return `
+          <div class="bg-slate-50 rounded-lg p-3">
+            <p>The input and output units are the same — no conversion needed.</p>
+            <p class="font-mono text-slate-800 mt-1">${value} ${unitShort[from]} = ${formatNum(result)} ${unitShort[to]}</p>
+          </div>
+        `;
+      }
+
+      const info = formulas[key];
+      return `
+        <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+          <p><strong>Formula:</strong></p>
+          <p class="font-mono text-slate-800">${info.formula}</p>
+        </div>
+        <div class="bg-slate-50 rounded-lg p-3 space-y-1">
+          <p><strong>Calculation:</strong></p>
+          <p class="font-mono text-slate-800">${info.steps}</p>
+        </div>
+        <div class="bg-blue-50 rounded-lg p-3 border border-blue-100">
+          <p><strong>Why it works:</strong> ${info.why}</p>
+        </div>
+      `;
+    }
+
+    function getFactorExplanation(fromUnit, toUnit, factor) {
+      const cat = categories[fromUnit];
+      const baseLabel = { length: 'metres', weight: 'grams', volume: 'millilitres' }[cat];
+      if (factor >= 1) {
+        return `There are ${formatNum(factor)} ${unitLabels[toUnit]} in every ${unitShort[fromUnit]}, so multiply the value by ${formatNum(factor)} to convert.`;
+      } else {
+        return `One ${unitShort[fromUnit]} is ${formatNum(factor)} ${unitLabels[toUnit]}, so multiply the value by this ratio to convert.`;
+      }
+    }
+  </script>
+
+</body>
+</html>
