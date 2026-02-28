@@ -20,16 +20,16 @@ Before beginning **any** task, confirm you have read and understood the relevant
 
 ## Instruction Files
 
-All instruction files live in `.github/instruction/`. Each file covers a specific concern:
+All instruction files live in `.github/instructions/`. Each file covers a specific concern:
 
 | File | Purpose | When to use |
 |---|---|---|
-| `instruction.md` | **This file.** Master index and workflow guide. | Always — read first for every task. |
-| `codingStandard.instruction.md` | Naming conventions, TypeScript rules, project structure, imports, testing, git, linting, and all general coding practices. | Any task that involves writing or reviewing code, creating files, or naming anything. |
-| `uiDesign.instruction.md` | Design system — Tailwind component classes, colour palette, typography, spacing, responsive breakpoints, animations, and HTML mockup requirements. | Designing UI, creating mockups, building front-end components, or reviewing visual output. |
-| `useCase.instruction.md` | Use case authoring — template, structure, actor definitions, ID scheme, traceability to features and UI mockups. | Writing, reviewing, or updating use cases. |
-| `feature.instruction.md` | Gherkin feature file authoring — scenario writing, specification by example, unique IDs, traceability back to use cases, file organisation. | Writing, reviewing, or updating feature/scenario specifications. |
-| `next.js.instruction.md` | Next.js best practices — App Router, Server/Client Components, data fetching, API routes, metadata, middleware, performance, security, deployment. | Building or reviewing Next.js application code. |
+| `instructions.md` | **This file.** Master index and workflow guide. | Always — read first for every task. |
+| `codingStandard.instructions.md` | Naming conventions, TypeScript rules, project structure, imports, testing, git, linting, and all general coding practices. | Any task that involves writing or reviewing code, creating files, or naming anything. |
+| `uiDesign.instructions.md` | Design system — Tailwind component classes, colour palette, typography, spacing, responsive breakpoints, animations, and HTML mockup requirements. | Designing UI, creating mockups, building front-end components, or reviewing visual output. |
+| `useCase.instructions.md` | Use case authoring — template, structure, actor definitions, ID scheme, traceability to features and UI mockups. | Writing, reviewing, or updating use cases. |
+| `feature.instructions.md` | Gherkin feature file authoring — scenario writing, specification by example, unique IDs, traceability back to use cases, file organisation. | Writing, reviewing, or updating feature/scenario specifications. |
+| `next.js.instructions.md` | Next.js best practices — App Router, Server/Client Components, data fetching, API routes, metadata, middleware, performance, security, deployment. | Building or reviewing Next.js application code. |
 
 ---
 
@@ -37,7 +37,7 @@ All instruction files live in `.github/instruction/`. Each file covers a specifi
 
 ```
 .github/
-  instruction/              # All instruction files (this folder)
+  instructions/             # All instruction files (this folder)
 specification/
   useCases/                 # Use case documents grouped by actor
   features/                 # Gherkin feature files grouped by area
@@ -57,13 +57,13 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 **Goal**: Define what the system should do.
 
 1. **Define actors** — Create `specification/useCases/actors.md` listing all user types.
-   - Follow: `useCase.instruction.md`
+   - Follow: `useCase.instructions.md`
 
 2. **Write use cases** — One file per use case, grouped by actor under `specification/useCases/`.
-   - Follow: `useCase.instruction.md`, `codingStandard.instruction.md` (file naming)
+   - Follow: `useCase.instructions.md`, `codingStandard.instructions.md` (file naming)
 
 3. **Write feature files** — Translate use cases into Gherkin scenarios under `specification/features/`.
-   - Follow: `feature.instruction.md`, `useCase.instruction.md` (for traceability IDs)
+   - Follow: `feature.instructions.md`, `useCase.instructions.md` (for traceability IDs)
    - Back-link feature/scenario IDs into the originating use cases.
 
 ### Phase 2: Design
@@ -71,7 +71,7 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 **Goal**: Define what the system looks like.
 
 4. **Create UI mockups** — One self-contained HTML file per page under `design/ui/`.
-   - Follow: `uiDesign.instruction.md`, `codingStandard.instruction.md` (file naming)
+   - Follow: `uiDesign.instructions.md`, `codingStandard.instructions.md` (file naming)
    - Link mockups from the relevant use cases (`## UI Reference` section).
 
 ### Phase 3: Implementation
@@ -79,7 +79,7 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 **Goal**: Build the system.
 
 5. **Build the Next.js application** — Implement pages, components, API routes, and logic under `src/`.
-   - Follow: `next.js.instruction.md`, `codingStandard.instruction.md`, `uiDesign.instruction.md` (design system classes)
+   - Follow: `next.js.instructions.md`, `codingStandard.instructions.md`, `uiDesign.instructions.md` (design system classes)
    - Reference use cases and feature files as the specification for what to build.
 
 ### Phase 4: Verification
@@ -87,7 +87,7 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 **Goal**: Confirm the system works as specified.
 
 6. **Test against feature files** — Use the Gherkin scenarios as the acceptance criteria.
-   - Follow: `feature.instruction.md`, `codingStandard.instruction.md` (testing section)
+   - Follow: `feature.instructions.md`, `codingStandard.instructions.md` (testing section)
 
 ---
 
@@ -95,14 +95,14 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 
 | Task | Required reading |
 |---|---|
-| Writing a use case | `useCase.instruction.md`, `codingStandard.instruction.md` |
-| Writing feature/scenario files | `feature.instruction.md`, `useCase.instruction.md`, `codingStandard.instruction.md` |
-| Creating a UI mockup | `uiDesign.instruction.md`, `codingStandard.instruction.md` |
-| Building a page or component | `next.js.instruction.md`, `codingStandard.instruction.md`, `uiDesign.instruction.md` |
-| Creating an API route | `next.js.instruction.md`, `codingStandard.instruction.md` |
-| Writing tests | `codingStandard.instruction.md`, `feature.instruction.md` |
+| Writing a use case | `useCase.instructions.md`, `codingStandard.instructions.md` |
+| Writing feature/scenario files | `feature.instructions.md`, `useCase.instructions.md`, `codingStandard.instructions.md` |
+| Creating a UI mockup | `uiDesign.instructions.md`, `codingStandard.instructions.md` |
+| Building a page or component | `next.js.instructions.md`, `codingStandard.instructions.md`, `uiDesign.instructions.md` |
+| Creating an API route | `next.js.instructions.md`, `codingStandard.instructions.md` |
+| Writing tests | `codingStandard.instructions.md`, `feature.instructions.md` |
 | Reviewing any deliverable | All files relevant to the deliverable type |
-| Starting a new task (any) | `instruction.md` (this file) + applicable files from above |
+| Starting a new task (any) | `instructions.md` (this file) + applicable files from above |
 
 ---
 
@@ -110,14 +110,14 @@ Work flows through these phases. Each phase has a primary instruction file, but 
 
 These rules come from the individual instruction files. Refer to the source file for full detail.
 
-- **File naming**: camelCase everywhere (`codingStandard.instruction.md`).
+- **File naming**: camelCase everywhere (`codingStandard.instructions.md`).
 - **One file per concern**: one use case per file, one feature per logical group, one mockup per page.
 - **Traceability**: use cases link to features (IDs), features link back to use cases (tags), mockups are referenced from use cases.
 - **Specification by example**: Gherkin scenarios use concrete values, test one behaviour, stay lean.
-- **Server Components by default**: only add `"use client"` when necessary (`next.js.instruction.md`).
-- **Design system first**: use the defined Tailwind component classes; don't invent ad-hoc styles (`uiDesign.instruction.md`).
-- **No application code in mockups**: HTML + Tailwind CDN + vanilla JS only (`uiDesign.instruction.md`).
-- **Feature files ≤ 400 lines**: split if larger (`feature.instruction.md`).
+- **Server Components by default**: only add `"use client"` when necessary (`next.js.instructions.md`).
+- **Design system first**: use the defined Tailwind component classes; don't invent ad-hoc styles (`uiDesign.instructions.md`).
+- **No application code in mockups**: HTML + Tailwind CDN + vanilla JS only (`uiDesign.instructions.md`).
+- **Feature files ≤ 400 lines**: split if larger (`feature.instructions.md`).
 
 ---
 
@@ -125,7 +125,7 @@ These rules come from the individual instruction files. Refer to the source file
 
 When a new concern arises that doesn't fit an existing file:
 
-1. Create a new `.instruction.md` file in `.github/instruction/`.
+1. Create a new `.instructions.md` file in `.github/instructions/`.
 2. Use camelCase for the filename.
 3. Add an entry to the table in this file with purpose and usage guidance.
 4. Update the "Which Instructions Apply" matrix if needed.
